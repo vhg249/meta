@@ -1,0 +1,24 @@
+FROM node:14.18-alpine
+
+#ADD SSH
+
+RUN apk add --update --no-cache bash git openssh \
+     && echo "root:Docker!" | chpasswd
+
+RUN mkdir -p /var/run/sshd
+
+EXPOSE 80 2222
+
+COPY sshd_config /etc/ssh/
+
+#RUN SOURCE CODE
+
+WORKDIR /usr/app
+
+COPY . .
+
+RUN npm install -qy
+
+EXPOSE 3000 8000 2222
+
+CMD ["npm", "start"]
